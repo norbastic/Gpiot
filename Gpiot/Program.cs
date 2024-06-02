@@ -1,3 +1,7 @@
+using Gpiot.DB;
+using Gpiot.Helpers;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -6,10 +10,8 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-var postgresUser = Environment.GetEnvironmentVariable("Postgresql:user");
-var postgresPassword = Environment.GetEnvironmentVariable("Postgresql:password");
-
-
+var connectionString = ConnectionStringHelper.GetConnectionString(builder);
+builder.Services.AddDbContext<RpiDbContext>(options => options.UseNpgsql(connectionString));
 
 var app = builder.Build();
 
