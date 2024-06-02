@@ -1,0 +1,6 @@
+@Gpiot_HostAddress = http://localhost:5178
+
+GET {{Gpiot_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
