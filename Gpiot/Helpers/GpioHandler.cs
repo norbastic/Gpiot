@@ -1,9 +1,10 @@
 using System.Device.Gpio;
+using Gpiot.Interfaces;
 using GpioPin = Gpiot.Models.GpioPin;
 
 namespace Gpiot.Helpers;
 
-public class GpioHandler : IDisposable
+public class GpioHandler : IDisposable, IGpioHandler
 {
     private readonly GpioController _gpioController;
 
@@ -14,15 +15,23 @@ public class GpioHandler : IDisposable
 
     public GpioPin GetStatusOfPin(int pinId)
     {
-        var pinMode = _gpioController.GetPinMode(pinId);
         var open = _gpioController.IsPinOpen(pinId);
-        var pinValue = _gpioController.Read(pinId);
+        var pinMode = string.Empty;
+        var pinValue = 0;
+        
+        if (open)
+        {
+            var mode = _gpioController.GetPinMode(pinId);
+            pinMode = GpioValueMapper.GetPinMode(mode);
+            pinValue = _gpioController.Read(pinId).Equals(PinValue.High) ?
+                    1 : 0;
+        }
         
         return new GpioPin
         {
             GpioPinId = pinId,
-            PinMode = GpioValueMapper.GetPinMode(pinMode),
-            Value = pinValue.Equals(PinValue.High) ? 1 : 0,
+            PinMode = pinMode,
+            Value = pinValue,
             Open = open
         };
     }
