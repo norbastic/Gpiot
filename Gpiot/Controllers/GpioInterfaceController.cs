@@ -6,15 +6,10 @@ namespace Gpiot.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class GpioInterfaceController : ControllerBase
+public class GpioInterfaceController(IGpioHandler gpioHandler) : ControllerBase
 {
-    private readonly IGpioHandler _gpioHandler;
+    private readonly IGpioHandler _gpioHandler = gpioHandler;
 
-    public GpioInterfaceController(IGpioHandler gpioHandler)
-    {
-        _gpioHandler = gpioHandler;
-    }
-    
     [HttpGet("{id:int}")]
     public ActionResult<GpioPin> GetAllPorts(int id)
     {
@@ -30,12 +25,17 @@ public class GpioInterfaceController : ControllerBase
     }
 
     [HttpPost]
-    public ActionResult OpenPin()
+    public ActionResult SetPinStatus([FromBody] GpioPin gpioPin)
     {
+        if (gpioPin == null || gpioPin.GpioPinId <= 0)
+        {
+            return BadRequest("Invalid pin id.");
+        }
+
         try
         {
-            var openedSuccessfully = _gpioHandler.SetPinOpen(id);
-            return openedSuccessfully ? StatusCode(StatusCodes.Status200OK) :
+            var pinSetSuccessfully = _gpioHandler.SetPin(gpioPin);
+            return pinSetSuccessfully ? StatusCode(StatusCodes.Status200OK) :
             StatusCode(StatusCodes.Status400BadRequest);
         }
         catch (Exception)
