@@ -28,4 +28,20 @@ public class GpioInterfaceController : ControllerBase
                 "Error while getting the status of gpio pin");
         }
     }
+
+    [HttpPost]
+    public ActionResult OpenPin()
+    {
+        try
+        {
+            var openedSuccessfully = _gpioHandler.SetPinOpen(id);
+            return openedSuccessfully ? StatusCode(StatusCodes.Status200OK) :
+            StatusCode(StatusCodes.Status400BadRequest);
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError,
+                "Error while getting the status of gpio pin");
+        }
+    }
 }

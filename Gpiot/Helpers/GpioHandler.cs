@@ -36,6 +36,31 @@ public class GpioHandler : IDisposable, IGpioHandler
         };
     }
 
+    public bool SetPin(GpioPin pinInfo)
+    {
+        if (pinInfo.Open) {
+            _gpioController.OpenPin(pinInfo.GpioPinId);
+        } else {
+            _gpioController.ClosePin(pinInfo.GpioPinId);
+        }
+        
+        if (!_gpioController.IsPinOpen(pinInfo.GpioPinId))
+        {
+            return true;                        
+        }
+
+        try {
+            var mode = GpioValueMapper.GetPinMode(pinInfo.PinMode);
+            _gpioController.SetPinMode(pinInfo.GpioPinId, mode);
+            var val = GpioValueMapper.GetPinValue(pinInfo.Value); 
+            _gpioController.Write(pinInfo.GpioPinId, val);
+            
+            return true;
+        } catch {
+            return false;
+        }
+    }
+
     public void Dispose()
     {
         _gpioController.Dispose();
