@@ -33,7 +33,7 @@ public class EnvVariableHelper
         return npgsqlBuilder.ConnectionString;
     }
 
-    public static Auth0Config GetAuth0Config(WebApplicationBuilder builder) {
+    public static Auth0Config GetAuth0Config() {
         var auth0Domain = Environment.GetEnvironmentVariable("AUTH0_DOMAIN");
         var auth0ClientId = Environment.GetEnvironmentVariable("AUTH0_CLIENT_ID");
         var auth0ClientSecret = Environment.GetEnvironmentVariable("AUTH0_CLIENT_SECRET");
