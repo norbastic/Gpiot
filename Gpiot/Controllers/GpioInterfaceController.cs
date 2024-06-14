@@ -1,6 +1,7 @@
 using Gpiot.Models;
 using Gpiot.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Gpiot.Controllers;
 
@@ -10,6 +11,7 @@ public class GpioInterfaceController(IGpioHandler gpioHandler) : ControllerBase
 {
     private readonly IGpioHandler _gpioHandler = gpioHandler;
 
+    [Authorize]
     [HttpGet("{id:int}")]
     public ActionResult<GpioPin> GetAllPorts(int id)
     {
