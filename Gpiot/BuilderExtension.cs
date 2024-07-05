@@ -5,6 +5,7 @@ using Gpiot.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Quartz;
 
 public static class BuilderExtension {
     public static void RegisterCustomDependencies(this WebApplicationBuilder builder) {
@@ -33,5 +34,12 @@ public static class BuilderExtension {
 
         });
         builder.Services.AddAuthorization();
+        builder.Services.AddQuartz(options => 
+            options.UseInMemoryStore()
+        );
+        builder.Services.AddQuartzHostedService(options =>
+        {
+            options.WaitForJobsToComplete = true;
+        });
     }    
 }
