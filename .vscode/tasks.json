@@ -16,7 +16,7 @@
                 "Debug",
                 "-o",
                 // It is attached via sshfs
-                "~/Documents/playground/Gpiot"
+                "~/rpimount/Gpiot"
             ],
             "group": "build",
             "presentation": {
